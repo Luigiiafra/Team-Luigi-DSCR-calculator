@@ -19,7 +19,7 @@
 <style>
   :root{
     --ink:#FFFFFF;
-    --ink-soft:rgba(255,255,255,.68);
+    --ink-soft:#FFFFFF;
     --paper:#080E2E;
     --panel:#121A44;
     --ink-deep:#050912;
@@ -144,7 +144,7 @@
   }
   input[type="range"]{
     width:100%;
-    accent-color:#FFFFFF;
+    accent-color:#D9BB5B;
     margin-top:2px;
   }
   .grid2{
@@ -162,7 +162,7 @@
     user-select:none;
     margin-bottom:14px;
   }
-  .optional-toggle input{accent-color:#FFFFFF;}
+  .optional-toggle input{accent-color:#D9BB5B;}
   .hidden{display:none !important;}
 
   /* Gauge */
@@ -202,6 +202,7 @@
     border:1px solid var(--line);
     border-radius:var(--radius);
     padding:22px 18px;
+    overflow:hidden;
   }
   .result-eyebrow{
     font-family:'IBM Plex Mono',monospace;
@@ -241,6 +242,16 @@
   .breakdown .row span:last-child{
     font-family:'IBM Plex Mono',monospace;
     color:var(--ink);
+  }
+  .tagline{
+    font-weight:700;
+    font-size:12.5px;
+    letter-spacing:.02em;
+    text-align:center;
+    margin:16px -18px -22px -18px;
+    padding:14px 18px 20px;
+    background:var(--paper);
+    border-radius:0 0 var(--radius) var(--radius);
   }
   .footnote{
     font-size:11px;
@@ -387,7 +398,7 @@
     <div class="gauge-wrap">
       <svg viewBox="0 0 200 112" width="200" height="112">
         <path d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#28315C" stroke-width="14" stroke-linecap="round"/>
-        <path id="gaugeArc" d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#D9BB5B" stroke-width="14" stroke-linecap="round"/>
+        <path id="gaugeArc" d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#FFFFFF" stroke-width="14" stroke-linecap="round"/>
         <line id="gaugeNeedle" x1="100" y1="100" x2="100" y2="30" stroke="#D9BB5B" stroke-width="3" stroke-linecap="round"/>
         <circle cx="100" cy="100" r="5" fill="#D9BB5B"/>
       </svg>
@@ -405,6 +416,7 @@
       <div class="row"><span>Max monthly payment</span><span id="bdMonthlyDS">$12,000</span></div>
       <div class="row"><span>Implied LTV</span><span id="bdLTV">—</span></div>
     </div>
+    <div class="tagline">And Remember .... #FinanceWithLuigi</div>
   </div>
 
   <p class="footnote">Rough sizing tool for exploration, not a commitment or rate quote. Actual lender underwriting also weighs property class, tenant mix, sponsor covenant, and stress-tested qualifying rates.</p>
@@ -551,7 +563,7 @@ function calc(){
   $('gaugeNeedle').setAttribute('y2', ny.toFixed(1));
 
   // arc color fill portion up to threshold vs full — recolor arc green/rust based on pass
-  $('gaugeArc').setAttribute('stroke', pass ? '#D9BB5B' : '#E2776B');
+  $('gaugeArc').setAttribute('stroke', pass ? '#FFFFFF' : '#E2776B');
 }
 
 calc();
