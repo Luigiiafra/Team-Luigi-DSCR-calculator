@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Max Loan — Commercial Underwriting</title>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#16262E">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Max Loan">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16262E;
+    --ink-soft:#3E5058;
+    --paper:#EFEAE0;
+    --panel:#FAF7EF;
+    --line:#DCD5C4;
+    --green:#3F6659;
+    --green-soft:#DCE6E1;
+    --gold:#B98B2E;
+    --rust:#9C4A3C;
+    --rust-soft:#F0DFD9;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:20px 14px 48px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{
+    width:100%;
+    max-width:460px;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  h1{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    font-size:30px;
+    line-height:1.08;
+    margin:0 0 4px;
+    letter-spacing:-.01em;
+  }
+  .sub{
+    font-size:13.5px;
+    color:var(--ink-soft);
+    margin:0 0 22px;
+    line-height:1.45;
+  }
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px 18px;
+    margin-bottom:14px;
+  }
+  .section-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+  }
+  .toggle{
+    display:flex;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:3px;
+    margin-bottom:16px;
+  }
+  .toggle button{
+    flex:1;
+    border:none;
+    background:transparent;
+    padding:9px 4px;
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:11px;
+    font-weight:500;
+    color:var(--ink-soft);
+    border-radius:7px;
+    cursor:pointer;
+    transition:.15s;
+    white-space:nowrap;
+  }
+  .toggle button.active{
+    background:var(--ink);
+    color:var(--panel);
+  }
+  .field{
+    margin-bottom:14px;
+  }
+  .field:last-child{margin-bottom:0;}
+  .field label{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  .field label .val{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:13px;
+    color:var(--ink);
+    font-weight:500;
+  }
+  input[type="number"]{
+    width:100%;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:9px;
+    padding:11px 12px;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:15px;
+    color:var(--ink);
+  }
+  input[type="number"]:focus{
+    outline:2px solid var(--green);
+    outline-offset:1px;
+  }
+  input[type="range"]{
+    width:100%;
+    accent-color:var(--green);
+    margin-top:2px;
+  }
+  .grid2{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  .optional-toggle{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    cursor:pointer;
+    user-select:none;
+    margin-bottom:14px;
+  }
+  .optional-toggle input{accent-color:var(--green);}
+  .hidden{display:none !important;}
+
+  /* Gauge */
+  .gauge-wrap{
+    text-align:center;
+    padding:6px 0 2px;
+  }
+  .gauge-caption{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    color:var(--ink-soft);
+    letter-spacing:.06em;
+    margin-top:2px;
+  }
+  .dscr-readout{
+    font-family:'Fraunces',serif;
+    font-size:34px;
+    font-weight:600;
+    margin-top:-6px;
+  }
+  .dscr-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:11px;
+    letter-spacing:.04em;
+    padding:3px 9px;
+    border-radius:20px;
+    margin-top:6px;
+  }
+  .tag-pass{background:var(--green-soft); color:var(--green);}
+  .tag-fail{background:var(--rust-soft); color:var(--rust);}
+
+  /* Result */
+  .result-card{
+    background:var(--ink);
+    color:var(--panel);
+    border-radius:var(--radius);
+    padding:22px 18px;
+  }
+  .result-eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:#9FB0AC;
+    margin-bottom:6px;
+  }
+  .result-amount{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:38px;
+    font-weight:500;
+    letter-spacing:-.01em;
+    line-height:1.05;
+  }
+  .result-binding{
+    font-size:12px;
+    color:#C9CFC9;
+    margin-top:6px;
+    margin-bottom:16px;
+  }
+  .result-binding b{color:var(--gold); font-weight:600;}
+  .breakdown{
+    border-top:1px solid rgba(255,255,255,.14);
+    padding-top:14px;
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+  }
+  .breakdown .row{
+    display:flex;
+    justify-content:space-between;
+    font-size:12.5px;
+    color:#C9CFC9;
+  }
+  .breakdown .row span:last-child{
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--panel);
+  }
+  .footnote{
+    font-size:11px;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:20px;
+    line-height:1.5;
+    padding:0 8px;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="eyebrow">Commercial Underwriting</div>
+  <h1>Max Loan Calculator</h1>
+  <p class="sub">DSCR and LTV-constrained loan sizing for commercial and multi-unit properties. The lower of the two tests sets your number — same as a lender.</p>
+
+  <div class="card">
+    <div class="section-label">Property Cash Flow</div>
+    <div class="toggle">
+      <button id="btnNOI" class="active">NOI</button>
+      <button id="btnRevExp">Rev / Exp</button>
+      <button id="btnMUR">Rental (MUR)</button>
+    </div>
+
+    <div id="noiFields">
+      <div class="field">
+        <label>Annual Net Operating Income</label>
+        <input type="number" id="noiInput" value="180000" inputmode="decimal">
+      </div>
+    </div>
+
+    <div id="revExpFields" class="hidden">
+      <div class="grid2">
+        <div class="field">
+          <label>Gross Annual Revenue</label>
+          <input type="number" id="revInput" value="260000" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Annual Operating Expenses</label>
+          <input type="number" id="expInput" value="80000" inputmode="decimal">
+        </div>
+      </div>
+    </div>
+
+    <div id="murFields" class="hidden">
+      <div class="grid2">
+        <div class="field">
+          <label>Gross Annual Income</label>
+          <input type="number" id="murGAI" value="101220" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Vacancy <span class="val" id="murVacVal">4.0%</span></label>
+          <input type="range" id="murVacancy" min="0" max="15" step="0.5" value="4">
+        </div>
+      </div>
+      <div class="field">
+        <label>Tenant recoveries (non-vacancy income)</label>
+        <input type="number" id="murRecoveries" value="0" inputmode="decimal">
+      </div>
+
+      <div class="section-label" style="margin-top:18px;">Operating Expenses</div>
+      <div class="grid2">
+        <div class="field">
+          <label>Condo fees (if applicable)</label>
+          <input type="number" id="murCondo" value="0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Property taxes</label>
+          <input type="number" id="murTax" value="16800" inputmode="decimal">
+        </div>
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Utilities (water &amp; hydro)</label>
+          <input type="number" id="murUtil" value="0" inputmode="decimal">
+        </div>
+        <div class="field">
+          <label>Heat</label>
+          <input type="number" id="murHeat" value="0" inputmode="decimal">
+        </div>
+      </div>
+      <div class="field">
+        <label>Fire insurance</label>
+        <input type="number" id="murFire" value="5022" inputmode="decimal">
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label># of units</label>
+          <input type="number" id="murUnits" value="8" inputmode="numeric">
+        </div>
+        <div class="field">
+          <label>Maintenance $/unit</label>
+          <input type="number" id="murMaintRate" value="350" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="breakdown" style="border-top:1px solid var(--line); padding-top:14px; margin-top:6px;">
+        <div class="row" style="color:var(--ink-soft);"><span>Effective gross income</span><span id="murEGI" style="font-family:'IBM Plex Mono',monospace; color:var(--ink);">$0</span></div>
+        <div class="row" style="color:var(--ink-soft);"><span>Total operating expenses</span><span id="murOpex" style="font-family:'IBM Plex Mono',monospace; color:var(--ink);">$0</span></div>
+        <div class="row" style="color:var(--ink-soft);"><span><b>NOI (excl. financing)</b></span><span id="murNOI" style="font-family:'IBM Plex Mono',monospace; color:var(--ink); font-weight:600;">$0</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Loan Terms</div>
+    <div class="field">
+      <label>Interest rate <span class="val" id="rateVal">6.25%</span></label>
+      <input type="range" id="rateSlider" min="3" max="12" step="0.05" value="6.25">
+    </div>
+    <div class="field">
+      <label>Amortization <span class="val" id="amortVal">25 yrs</span></label>
+      <input type="range" id="amortSlider" min="5" max="35" step="1" value="25">
+    </div>
+    <div class="field">
+      <label>Minimum DSCR required <span class="val" id="dscrVal">1.25×</span></label>
+      <input type="range" id="dscrSlider" min="1.00" max="1.60" step="0.01" value="1.25">
+    </div>
+  </div>
+
+  <label class="optional-toggle">
+    <input type="checkbox" id="ltvCheck">
+    Also apply an LTV ceiling
+  </label>
+
+  <div class="card hidden" id="ltvCard">
+    <div class="section-label">Value-Based Constraint</div>
+    <div class="grid2">
+      <div class="field">
+        <label>Property value</label>
+        <input type="number" id="valueInput" value="2200000" inputmode="decimal">
+      </div>
+      <div class="field">
+        <label>Max LTV <span class="val" id="ltvVal">65%</span></label>
+        <input type="range" id="ltvSlider" min="40" max="85" step="1" value="65">
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Coverage Cushion</div>
+    <div class="gauge-wrap">
+      <svg viewBox="0 0 200 112" width="200" height="112">
+        <path d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#DCD5C4" stroke-width="14" stroke-linecap="round"/>
+        <path id="gaugeArc" d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#3F6659" stroke-width="14" stroke-linecap="round"/>
+        <line id="gaugeNeedle" x1="100" y1="100" x2="100" y2="30" stroke="#16262E" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="5" fill="#16262E"/>
+      </svg>
+      <div class="dscr-readout" id="dscrReadout">1.44×</div>
+      <div id="dscrTag" class="dscr-tag tag-pass">above minimum</div>
+    </div>
+  </div>
+
+  <div class="result-card">
+    <div class="result-eyebrow">Maximum Loan Amount</div>
+    <div class="result-amount" id="resultAmount">$1,382,400</div>
+    <div class="result-binding" id="resultBinding">Sized by <b>DSCR test</b> at 1.25× minimum coverage.</div>
+    <div class="breakdown">
+      <div class="row"><span>Max annual debt service</span><span id="bdAnnualDS">$144,000</span></div>
+      <div class="row"><span>Max monthly payment</span><span id="bdMonthlyDS">$12,000</span></div>
+      <div class="row"><span>Implied LTV</span><span id="bdLTV">—</span></div>
+    </div>
+  </div>
+
+  <p class="footnote">Rough sizing tool for exploration, not a commitment or rate quote. Actual lender underwriting also weighs property class, tenant mix, sponsor covenant, and stress-tested qualifying rates.</p>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const fmt = n => '$' + Math.round(n).toLocaleString('en-US');
+const fmtPct = n => n.toFixed(1) + '%';
+
+let mode = 'noi'; // 'noi', 'revexp', or 'mur'
+
+$('btnNOI').onclick = () => setMode('noi');
+$('btnRevExp').onclick = () => setMode('revexp');
+$('btnMUR').onclick = () => setMode('mur');
+function setMode(m){
+  mode = m;
+  $('btnNOI').classList.toggle('active', m==='noi');
+  $('btnRevExp').classList.toggle('active', m==='revexp');
+  $('btnMUR').classList.toggle('active', m==='mur');
+  $('noiFields').classList.toggle('hidden', m!=='noi');
+  $('revExpFields').classList.toggle('hidden', m!=='revexp');
+  $('murFields').classList.toggle('hidden', m!=='mur');
+  calc();
+}
+
+$('ltvCheck').onchange = () => {
+  $('ltvCard').classList.toggle('hidden', !$('ltvCheck').checked);
+  calc();
+};
+
+['rateSlider','amortSlider','dscrSlider','ltvSlider'].forEach(id=>{
+  $(id).addEventListener('input', calc);
+});
+['noiInput','revInput','expInput','valueInput',
+ 'murGAI','murRecoveries','murCondo','murTax','murUtil','murHeat','murFire','murUnits','murMaintRate'].forEach(id=>{
+  $(id).addEventListener('input', calc);
+});
+$('murVacancy').addEventListener('input', calc);
+
+function getNOI(){
+  if(mode==='noi'){
+    return parseFloat($('noiInput').value) || 0;
+  } else if(mode==='revexp'){
+    const rev = parseFloat($('revInput').value) || 0;
+    const exp = parseFloat($('expInput').value) || 0;
+    return Math.max(rev - exp, 0);
+  } else {
+    // MUR mode — mirrors: Gross Income, less Vacancy, plus Tenant Recoveries = EGI
+    // EGI less Opex (excl. financing) = NOI
+    const gai = parseFloat($('murGAI').value) || 0;
+    const vacPct = parseFloat($('murVacancy').value) || 0;
+    const recoveries = parseFloat($('murRecoveries').value) || 0;
+    const egi = gai - (gai * (vacPct/100)) + recoveries;
+
+    const condo = parseFloat($('murCondo').value) || 0;
+    const tax = parseFloat($('murTax').value) || 0;
+    const util = parseFloat($('murUtil').value) || 0;
+    const heat = parseFloat($('murHeat').value) || 0;
+    const fire = parseFloat($('murFire').value) || 0;
+    const units = parseFloat($('murUnits').value) || 0;
+    const maintRate = parseFloat($('murMaintRate').value) || 0;
+    const maintenance = units * maintRate;
+
+    const totalOpex = condo + tax + util + heat + fire + maintenance;
+    const noi = egi - totalOpex;
+
+    $('murEGI').textContent = fmt(egi);
+    $('murOpex').textContent = fmt(totalOpex);
+    $('murNOI').textContent = fmt(noi);
+
+    return Math.max(noi, 0);
+  }
+}
+
+function maxLoanFromPayment(monthlyPayment, annualRate, amortYears){
+  const i = (annualRate/100)/12;
+  const n = amortYears*12;
+  if(i===0) return monthlyPayment*n;
+  return monthlyPayment * (1 - Math.pow(1+i, -n)) / i;
+}
+
+function calc(){
+  const noi = getNOI();
+  const rate = parseFloat($('rateSlider').value);
+  const amort = parseFloat($('amortSlider').value);
+  const dscrMin = parseFloat($('dscrSlider').value);
+
+  $('rateVal').textContent = rate.toFixed(2) + '%';
+  $('amortVal').textContent = amort + ' yrs';
+  $('dscrVal').textContent = dscrMin.toFixed(2) + '×';
+  $('murVacVal').textContent = (parseFloat($('murVacancy').value)||0).toFixed(1) + '%';
+
+  const maxAnnualDS = noi / dscrMin;
+  const maxMonthlyDS = maxAnnualDS / 12;
+  const dscrLoan = maxLoanFromPayment(maxMonthlyDS, rate, amort);
+
+  let finalLoan = dscrLoan;
+  let binding = 'DSCR test';
+  let bindingDetail = `at ${dscrMin.toFixed(2)}× minimum coverage`;
+  let ltvOut = '—';
+
+  if($('ltvCheck').checked){
+    const value = parseFloat($('valueInput').value) || 0;
+    const ltvPct = parseFloat($('ltvSlider').value);
+    $('ltvVal').textContent = ltvPct + '%';
+    const ltvLoan = value * (ltvPct/100);
+
+    if(ltvLoan < dscrLoan){
+      finalLoan = ltvLoan;
+      binding = 'LTV test';
+      bindingDetail = `at ${ltvPct}% of a ${fmt(value)} valuation`;
+    }
+    ltvOut = value>0 ? fmtPct((finalLoan/value)*100) : '—';
+  }
+
+  $('resultAmount').textContent = fmt(finalLoan);
+  $('resultBinding').innerHTML = `Sized by <b>${binding}</b> ${bindingDetail}.`;
+  $('bdAnnualDS').textContent = fmt(maxAnnualDS);
+  $('bdMonthlyDS').textContent = fmt(maxMonthlyDS);
+  $('bdLTV').textContent = ltvOut;
+
+  // Gauge: reflect ratio of achieved DSCR (using NOI over debt service on final loan) vs minimum
+  const i = (rate/100)/12;
+  const n = amort*12;
+  const finalMonthlyPayment = i===0 ? finalLoan/n : finalLoan * (i / (1-Math.pow(1+i,-n)));
+  const finalAnnualDS = finalMonthlyPayment*12;
+  const achievedDSCR = finalAnnualDS>0 ? noi/finalAnnualDS : dscrMin;
+
+  $('dscrReadout').textContent = achievedDSCR.toFixed(2) + '×';
+  const pass = achievedDSCR >= dscrMin - 0.001;
+  $('dscrTag').textContent = pass ? 'meets minimum' : 'below minimum';
+  $('dscrTag').className = 'dscr-tag ' + (pass ? 'tag-pass' : 'tag-fail');
+
+  // needle angle: map DSCR range 1.00x -> 1.60x across 0deg-180deg arc (clamped)
+  const clamped = Math.min(Math.max(achievedDSCR, 1.0), 1.8);
+  const t = (clamped - 1.0) / (1.8 - 1.0);
+  const angleDeg = 180 - (t*180); // 180 = left (low), 0 = right (high)
+  const rad = angleDeg * Math.PI/180;
+  const cx=100, cy=100, r=70;
+  const nx = cx + r*Math.cos(rad);
+  const ny = cy - r*Math.sin(rad);
+  $('gaugeNeedle').setAttribute('x2', nx.toFixed(1));
+  $('gaugeNeedle').setAttribute('y2', ny.toFixed(1));
+
+  // arc color fill portion up to threshold vs full — recolor arc green/rust based on pass
+  $('gaugeArc').setAttribute('stroke', pass ? '#3F6659' : '#9C4A3C');
+}
+
+calc();
+
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js').catch(() => {});
+  });
+}
+</script>
+</body>
+</html>
