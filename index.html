@@ -6,7 +6,7 @@
 <title>Max Loan — Commercial Underwriting</title>
 
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#16262E">
+<meta name="theme-color" content="#080E2E">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -18,16 +18,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#16262E;
-    --ink-soft:#3E5058;
-    --paper:#EFEAE0;
-    --panel:#FAF7EF;
-    --line:#DCD5C4;
-    --green:#3F6659;
-    --green-soft:#DCE6E1;
-    --gold:#B98B2E;
-    --rust:#9C4A3C;
-    --rust-soft:#F0DFD9;
+    --ink:#FFFFFF;
+    --ink-soft:rgba(255,255,255,.68);
+    --paper:#080E2E;
+    --panel:#121A44;
+    --ink-deep:#050912;
+    --line:#28315C;
+    --green:#D9BB5B;
+    --green-soft:rgba(217,187,91,.15);
+    --gold:#D9BB5B;
+    --rust:#E2776B;
+    --rust-soft:rgba(226,119,107,.15);
     --radius:14px;
   }
   *{box-sizing:border-box;}
@@ -106,8 +107,8 @@
     white-space:nowrap;
   }
   .toggle button.active{
-    background:var(--ink);
-    color:var(--panel);
+    background:#FFFFFF;
+    color:var(--paper);
   }
   .field{
     margin-bottom:14px;
@@ -130,7 +131,7 @@
   input[type="number"]{
     width:100%;
     border:1px solid var(--line);
-    background:#fff;
+    background:var(--paper);
     border-radius:9px;
     padding:11px 12px;
     font-family:'IBM Plex Mono',monospace;
@@ -138,12 +139,12 @@
     color:var(--ink);
   }
   input[type="number"]:focus{
-    outline:2px solid var(--green);
+    outline:2px solid #FFFFFF;
     outline-offset:1px;
   }
   input[type="range"]{
     width:100%;
-    accent-color:var(--green);
+    accent-color:#FFFFFF;
     margin-top:2px;
   }
   .grid2{
@@ -161,7 +162,7 @@
     user-select:none;
     margin-bottom:14px;
   }
-  .optional-toggle input{accent-color:var(--green);}
+  .optional-toggle input{accent-color:#FFFFFF;}
   .hidden{display:none !important;}
 
   /* Gauge */
@@ -191,13 +192,14 @@
     border-radius:20px;
     margin-top:6px;
   }
-  .tag-pass{background:var(--green-soft); color:var(--green);}
+  .tag-pass{background:rgba(255,255,255,.14); color:#FFFFFF;}
   .tag-fail{background:var(--rust-soft); color:var(--rust);}
 
   /* Result */
   .result-card{
-    background:var(--ink);
-    color:var(--panel);
+    background:var(--ink-deep);
+    color:var(--ink);
+    border:1px solid var(--line);
     border-radius:var(--radius);
     padding:22px 18px;
   }
@@ -206,7 +208,7 @@
     font-size:10.5px;
     letter-spacing:.1em;
     text-transform:uppercase;
-    color:#9FB0AC;
+    color:var(--ink-soft);
     margin-bottom:6px;
   }
   .result-amount{
@@ -218,11 +220,11 @@
   }
   .result-binding{
     font-size:12px;
-    color:#C9CFC9;
+    color:var(--ink-soft);
     margin-top:6px;
     margin-bottom:16px;
   }
-  .result-binding b{color:var(--gold); font-weight:600;}
+  .result-binding b{color:#FFFFFF; font-weight:600;}
   .breakdown{
     border-top:1px solid rgba(255,255,255,.14);
     padding-top:14px;
@@ -234,11 +236,11 @@
     display:flex;
     justify-content:space-between;
     font-size:12.5px;
-    color:#C9CFC9;
+    color:var(--ink-soft);
   }
   .breakdown .row span:last-child{
     font-family:'IBM Plex Mono',monospace;
-    color:var(--panel);
+    color:var(--ink);
   }
   .footnote{
     font-size:11px;
@@ -349,15 +351,15 @@
     <div class="section-label">Loan Terms</div>
     <div class="field">
       <label>Interest rate <span class="val" id="rateVal">6.25%</span></label>
-      <input type="range" id="rateSlider" min="3" max="12" step="0.05" value="6.25">
+      <input type="range" id="rateSlider" min="2" max="20" step="0.05" value="6.25">
     </div>
     <div class="field">
       <label>Amortization <span class="val" id="amortVal">25 yrs</span></label>
-      <input type="range" id="amortSlider" min="5" max="35" step="1" value="25">
+      <input type="range" id="amortSlider" min="5" max="50" step="1" value="25">
     </div>
     <div class="field">
       <label>Minimum DSCR required <span class="val" id="dscrVal">1.25×</span></label>
-      <input type="range" id="dscrSlider" min="1.00" max="1.60" step="0.01" value="1.25">
+      <input type="range" id="dscrSlider" min="0.75" max="1.60" step="0.01" value="1.25">
     </div>
   </div>
 
@@ -384,10 +386,10 @@
     <div class="section-label">Coverage Cushion</div>
     <div class="gauge-wrap">
       <svg viewBox="0 0 200 112" width="200" height="112">
-        <path d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#DCD5C4" stroke-width="14" stroke-linecap="round"/>
-        <path id="gaugeArc" d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#3F6659" stroke-width="14" stroke-linecap="round"/>
-        <line id="gaugeNeedle" x1="100" y1="100" x2="100" y2="30" stroke="#16262E" stroke-width="3" stroke-linecap="round"/>
-        <circle cx="100" cy="100" r="5" fill="#16262E"/>
+        <path d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#28315C" stroke-width="14" stroke-linecap="round"/>
+        <path id="gaugeArc" d="M 14 100 A 86 86 0 0 1 186 100" fill="none" stroke="#D9BB5B" stroke-width="14" stroke-linecap="round"/>
+        <line id="gaugeNeedle" x1="100" y1="100" x2="100" y2="30" stroke="#D9BB5B" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="100" cy="100" r="5" fill="#D9BB5B"/>
       </svg>
       <div class="dscr-readout" id="dscrReadout">1.44×</div>
       <div id="dscrTag" class="dscr-tag tag-pass">above minimum</div>
@@ -538,8 +540,8 @@ function calc(){
   $('dscrTag').className = 'dscr-tag ' + (pass ? 'tag-pass' : 'tag-fail');
 
   // needle angle: map DSCR range 1.00x -> 1.60x across 0deg-180deg arc (clamped)
-  const clamped = Math.min(Math.max(achievedDSCR, 1.0), 1.8);
-  const t = (clamped - 1.0) / (1.8 - 1.0);
+  const clamped = Math.min(Math.max(achievedDSCR, 0.75), 1.8);
+  const t = (clamped - 0.75) / (1.8 - 0.75);
   const angleDeg = 180 - (t*180); // 180 = left (low), 0 = right (high)
   const rad = angleDeg * Math.PI/180;
   const cx=100, cy=100, r=70;
@@ -549,7 +551,7 @@ function calc(){
   $('gaugeNeedle').setAttribute('y2', ny.toFixed(1));
 
   // arc color fill portion up to threshold vs full — recolor arc green/rust based on pass
-  $('gaugeArc').setAttribute('stroke', pass ? '#3F6659' : '#9C4A3C');
+  $('gaugeArc').setAttribute('stroke', pass ? '#D9BB5B' : '#E2776B');
 }
 
 calc();
